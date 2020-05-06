@@ -6,8 +6,8 @@
         <th>Guichê</th>
     </tr>
     <tr style="font-size: 200px;">
-        <td align="center"><?=$telaMaster->senha->senha?></td>
-        <td align="center"><?=$telaMaster->guich->name?></td>
+        <td align="center"><?=@$telaMaster->senha->senha?></td>
+        <td align="center"><?=@$telaMaster->guich->name?></td>
     </tr>
 </table>
 <?php
