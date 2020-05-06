@@ -39,6 +39,39 @@ class SiteController extends AppController
 
     }
 
+    public function repetir($guiche_id){
+        $this->loadModel('Chamadas');
+        $this->loadModel('TelaMaster');
+
+        $chamada = $this->Chamadas->find()
+            ->where([
+                'guiche_id' => $guiche_id
+            ])
+            ->order([
+                'id' => 'DESC'
+            ])
+            ->first();
+
+        //debug($chamada->senha_id);
+        //die;
+        
+        $this->TelaMaster->updateAll(
+            [
+                'guiche_id' => $guiche_id,
+                'senha_id' => $chamada->senha_id,
+                'som' => 's'
+            ],
+            [
+                'id' => 1
+            ]
+            
+        );
+
+        die('ok');
+        
+
+    }
+
     function chamar($guiche_id){
         
         $this->loadModel('Senhas');
@@ -49,6 +82,8 @@ class SiteController extends AppController
             ->where(['em_uso' => 'n'])
             ->order(['id' => 'ASC'])
             ->first();
+        
+        
 
         $this->Chamadas->updateAll(
             ['finalizada' => 's'],
