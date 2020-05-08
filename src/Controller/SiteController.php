@@ -144,4 +144,18 @@ class SiteController extends AppController
         $this->set(compact('telaMaster', 'som'));
 
     }
+
+    public function contador(){
+
+        $this->loadModel('Contagem');
+
+        $contagem = $this->Contagem->get(1);
+
+        $contagem->contagem = $contagem->contagem + 1;
+
+        $this->Contagem->save($contagem);
+
+        die;
+
+    }
 }
