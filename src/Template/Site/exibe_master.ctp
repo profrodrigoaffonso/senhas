@@ -5,7 +5,7 @@
         <th>Senha</th>
         <th>Guichê</th>
     </tr>
-    <tr style="font-size: 200px;">
+    <tr style="font-size: 100px;">
         <td align="center"><?=@$telaMaster->senha->senha?></td>
         <td align="center"><?=@$telaMaster->guich->name?></td>
     </tr>

@@ -73,46 +73,51 @@ class SiteController extends AppController
     }
 
     function chamar($guiche_id){
-        
-        $this->loadModel('Senhas');
-        $this->loadModel('Chamadas');
-        $this->loadModel('TelaMaster');
-        $senha = $this->Senhas
-            ->find()
-            ->where(['em_uso' => 'n'])
-            ->order(['id' => 'ASC'])
-            ->first();
-        
-        
 
-        $this->Chamadas->updateAll(
-            ['finalizada' => 's'],
-            ['guiche_id' => $guiche_id]
-        );
+        $senhaChamada = "";
 
-        $this->TelaMaster->updateAll(
-            [
-                'guiche_id' => $guiche_id,
-                'senha_id' => $senha->id,
-                'som' => 's'
-            ],
-            [
-                'id' => 1
-            ]
+        if($this->request->is('post')){
+        
+            $this->loadModel('Senhas');
+            $this->loadModel('Chamadas');
+            $this->loadModel('TelaMaster');
+            $senha = $this->Senhas
+                ->find()
+                ->where(['em_uso' => 'n'])
+                ->order(['id' => 'ASC'])
+                ->first();
             
-        );
+            
 
-        $chamada = $this->Chamadas->newEntity();
+            $this->Chamadas->updateAll(
+                ['finalizada' => 's'],
+                ['guiche_id' => $guiche_id]
+            );
 
-        $chamada->senha_id = $senha->id;
-        $chamada->guiche_id = $guiche_id;
+            $this->TelaMaster->updateAll(
+                [
+                    'guiche_id' => $guiche_id,
+                    'senha_id' => $senha->id,
+                    'som' => 's'
+                ],
+                [
+                    'id' => 1
+                ]
+                
+            );
 
-        $this->Chamadas->save($chamada);
+            $chamada = $this->Chamadas->newEntity();
 
-        $senha->em_uso = 's';
-        $this->Senhas->save($senha);
-        echo ($senha->senha);
-        die;
+            $chamada->senha_id = $senha->id;
+            $chamada->guiche_id = $guiche_id;
+
+            $this->Chamadas->save($chamada);
+
+            $senha->em_uso = 's';
+            $this->Senhas->save($senha);
+            $senhaChamada = $senha->senha;
+        }
+        $this->set(compact('guiche_id', 'senhaChamada'));
     }
 
     public function exibeMaster(){
@@ -156,6 +161,24 @@ class SiteController extends AppController
         $this->Contagem->save($contagem);
 
         die;
+
+    }
+
+    public function escolherGuiche()
+    {
+
+        if($this->request->is('post')){
+            $data = $this->request->getData();
+            $this->redirect(['action' => 'chamar', $data['guiche_id']]); 
+        }
+
+        $this->loadModel('Guiches');
+
+        $guiches = $this->Guiches->find('list');
+
+        $this->set(compact('guiches'));
+
+        
 
     }
 }
