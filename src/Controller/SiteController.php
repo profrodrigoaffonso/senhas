@@ -121,29 +121,78 @@ class SiteController extends AppController
     }
 
     public function exibeMaster(){
-        
-        $this->loadModel('TelaMaster');
 
-        $telaMaster = $this->TelaMaster
+        $this->loadModel('Chamadas');
+
+        $telaMaster = $this->Chamadas
             ->find()
             ->contain([
-                'Senhas',
-                'Guiches'
-            ])
-            ->where([
-                'TelaMaster.id' => 1
-            ])
+                        'Senhas',
+                        'Guiches'
+                    ])
+            ->where(
+                [
+                    'exibe_master' => 's'
+                ]
+            )
             ->first();
-        
-        
+
+
+        if($telaMaster){
+
+            $this->Chamadas->updateAll(
+                ['exibe_master' => 'n'],
+                ['id' => $telaMaster->id]
+            );
+
+        } else {
+            $telaMaster = $this->Chamadas
+                ->find()
+                ->contain([
+                            'Senhas',
+                            'Guiches'
+                        ])
+                ->order(
+                    ['Chamadas.id' => 'DESC']
+                )            
+                ->first();
+
+        }
+
         $som = $telaMaster->som;
 
         if($som == 's'){
-            $this->TelaMaster->updateAll(
+            $this->Chamadas->updateAll(
                 ['som' => 'n'],
-                ['id' => 1]
+                ['id' => $telaMaster->id]
             );
         }
+
+                
+
+        
+        // $this->loadModel('TelaMaster');
+
+        // $telaMaster = $this->TelaMaster
+        //     ->find()
+        //     ->contain([
+        //         'Senhas',
+        //         'Guiches'
+        //     ])
+        //     ->where([
+        //         'TelaMaster.id' => 1
+        //     ])
+        //     ->first();
+        
+        
+        // $som = $telaMaster->som;
+
+        // if($som == 's'){
+        //     $this->TelaMaster->updateAll(
+        //         ['som' => 'n'],
+        //         ['id' => 1]
+        //     );
+        // }
         $this->viewBuilder()->setLayout('ajax');
 
         $this->set(compact('telaMaster', 'som'));
