@@ -98,7 +98,7 @@ class SiteController extends AppController
                 [
                     'guiche_id' => $guiche_id,
                     'senha_id' => $senha->id,
-                    'som' => 's'
+                    'som' => 'n'
                 ],
                 [
                     'id' => 1
@@ -146,16 +146,28 @@ class SiteController extends AppController
             );
 
         } else {
-            $telaMaster = $this->Chamadas
+            // die;
+            $this->loadModel('TelaMaster');
+
+            $telaMaster = $this->TelaMaster
                 ->find()
                 ->contain([
-                            'Senhas',
-                            'Guiches'
-                        ])
-                ->order(
-                    ['Chamadas.id' => 'DESC']
-                )            
+                    'Senhas',
+                    'Guiches'
+                ])
+                ->where([
+                    'TelaMaster.id' => 1
+                ])
                 ->first();
+
+            $som = $telaMaster->som;
+
+            if($som == 's'){
+                $this->TelaMaster->updateAll(
+                    ['som' => 'n'],
+                    ['id' => 1]
+                );
+            }
 
         }
 
