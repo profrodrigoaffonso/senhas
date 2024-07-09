@@ -24,15 +24,15 @@ class CreateSenhasTable extends Migration
 
         // $registros = [];
 
-        // for($i = 1; $i <= 999; $i++){
+        for($i = 1; $i <= 999; $i++){
 
-        //     DB::table('senhas')->insert([
-        //         'senha' => str_pad($i, 5, '0', STR_PAD_LEFT),
-        //         'created_at' => $data,
-        //         'updated_at' => $data
-        //     ]);
+            DB::table('senhas')->insert([
+                'senha' => str_pad($i, 5, '0', STR_PAD_LEFT),
+                'created_at' => $data,
+                'updated_at' => $data
+            ]);
 
-        // }
+        }
 
     }
 
